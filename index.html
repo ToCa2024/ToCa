@@ -14,7 +14,7 @@
 <section class="hero">
   <div class="hero-body">
     <div class="container has-text-centered">
-      <h1 class="title is-1">ToCa: ACCELERATING DIFFUSION TRANSFORMERS WITH TOKEN-WISE FEATURE CACHING</h1>
+      <h1 class="title is-1">ToCa: Accelerating Diffusion Transformers with Token-wise Feature Caching</h1>
       <p class="is-size-5">Anonymous</p>
     </div>
   </div>
@@ -44,34 +44,42 @@ In this paper, we introduce token-wise feature caching, allowing us to adaptivel
       <!-- 翻页控制按钮 -->
       <div class="columns is-centered has-text-centered">
         <div class="column is-narrow">
-          <button class="button" id="prevPage">⬅️</button>
+          <button class="button is-rounded" id="prevPage">
+            <span class="icon">
+              <i class="fas fa-chevron-left"></i>
+            </span>
+          </button>
         </div>
         <div class="column is-narrow">
-          <button class="button" id="nextPage">➡️</button>
+          <button class="button is-rounded" id="nextPage">
+            <span class="icon">
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </button>
         </div>
       </div>
 
-      <!-- 4宫格视频展示 -->
+      <!-- 四宫格视频展示 -->
       <div id="video-grid" class="columns is-multiline">
-        <div class="column is-one-quarter">
+        <div class="column is-half">
           <h3 class="subtitle has-text-centered">OpenSora</h3>
           <video controls muted width="100%">
             <source src="static/videos/examples/sample_0004/original.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="column is-one-quarter">
+        <div class="column is-half">
           <h3 class="subtitle has-text-centered">ToCa</h3>
           <video controls muted width="100%">
             <source src="static/videos/examples/sample_0004/ToCa.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="column is-one-quarter">
+        <div class="column is-half">
           <h3 class="subtitle has-text-centered">50% steps</h3>
           <video controls muted width="100%">
-            <source src="static/videos/examples/sample_0004/15steps.mp4"" type="video/mp4">
+            <source src="static/videos/examples/sample_0004/15steps.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="column is-one-quarter">
+        <div class="column is-half">
           <h3 class="subtitle has-text-centered">FORA</h3>
           <video controls muted width="100%">
             <source src="static/videos/examples/sample_0004/FORA.mp4" type="video/mp4">
@@ -129,7 +137,7 @@ In this paper, we introduce token-wise feature caching, allowing us to adaptivel
     videoGrid.innerHTML = '';
     videoPages[page - 1].forEach(video => {
       const videoColumn = `
-        <div class="column is-one-quarter">
+        <div class="column is-half">
           <h3 class="subtitle has-text-centered">${video.title}</h3>
           <video controls muted width="100%">
             <source src="${video.src}" type="video/mp4">
