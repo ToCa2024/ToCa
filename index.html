@@ -11,6 +11,19 @@
   <!-- 引入 MathJax 来渲染 LaTeX 公式 -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- 确保MathJax在页面加载后渲染 -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+
 </head>
 <body>
 
@@ -152,6 +165,11 @@
 
   // 初始化加载第一页视频
   loadVideoPage(currentPage);
+
+  // 强制MathJax重新渲染公式
+  document.addEventListener('DOMContentLoaded', () => {
+    MathJax.typesetPromise();
+  });
 </script>
 
 </body>
