@@ -1,0 +1,27 @@
+.custom-page-btn {
+  background-color: #3273dc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border-radius: 50%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-page-btn:hover {
+  background-color: #2756a5;
+  transform: translateY(-3px);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-page-btn:active {
+  background-color: #1d3f7b;
+  transform: translateY(1px);
+}
+
+.custom-page-btn:disabled {
+  background-color: #b5b5b5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
