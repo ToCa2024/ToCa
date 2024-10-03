@@ -131,27 +131,33 @@
   let currentPage = 1;
   const totalPages = videoPages.length;
 
-  // 加载视频页面
-  function loadVideoPage(page) {
-    const videoGrid = document.getElementById('video-grid');
-    videoGrid.innerHTML = ''; // 清空现有的视频
+// 加载视频页面
+function loadVideoPage(page) {
+  const videoGrid = document.getElementById('video-grid');
+  videoGrid.innerHTML = ''; // 清空现有的视频
 
-    videoPages[page - 1].forEach(video => {
-      const videoColumn = `
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">${video.title}</h3>
-          <video controls muted width="100%">
-            <source src="${video.src}" type="video/mp4">
-          </video>
-        </div>
-      `;
-      videoGrid.innerHTML += videoColumn;
-    });
+  videoPages[page - 1].forEach(video => {
+    // 检查是否是 ToCa 视频，并对其进行特殊处理
+    const videoTitle = video.title === 'ToCa' ? 
+      `<span style="font-family: 'Courier New', monospace;">ToCa</span> (Ours)` : 
+      video.title;
 
-    // 更新按钮的禁用状态
-    document.getElementById('prevPage').disabled = page === 1;
-    document.getElementById('nextPage').disabled = page === totalPages;
-  }
+    const videoColumn = `
+      <div class="column is-half">
+        <h3 class="subtitle has-text-centered">${videoTitle}</h3>
+        <video controls muted width="100%">
+          <source src="${video.src}" type="video/mp4">
+        </video>
+      </div>
+    `;
+    videoGrid.innerHTML += videoColumn;
+  });
+
+  // 更新按钮的禁用状态
+  document.getElementById('prevPage').disabled = page === 1;
+  document.getElementById('nextPage').disabled = page === totalPages;
+}
+
 
   // 点击“上一页”按钮
   document.getElementById('prevPage').addEventListener('click', function () {
