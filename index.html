@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
+  <!-- 引入 MathJax 来渲染 LaTeX 公式 -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
@@ -27,8 +31,10 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
-          <p>Diffusion transformers have shown significant effectiveness in both image and video synthesis at the expense of huge computation costs. To address this problem, feature caching methods have been introduced to accelerate diffusion transformers by caching the features in previous timesteps and reusing them in the following timesteps. However, previous caching methods ignore that different tokens exhibit different sensitivities to feature caching, and feature caching on some tokens may lead to 10$\times$ more destruction to the overall generation quality compared with other tokens.
-In this paper, we introduce token-wise feature caching, allowing us to adaptively select the most suitable tokens for caching, and further enable us to apply different caching ratios to neural layers in different types and depths. Extensive experiments on PixArt-$\alpha$, OpenSora, and DiT demonstrate our effectiveness in both image and video generation with no requirements for training. For instance, 2.36$\times$ and 1.93$\times$ acceleration are achieved on OpenSora and PixArt-$\alpha$ with almost no drop in generation quality.</p>
+          <p>
+            Diffusion transformers have shown significant effectiveness in both image and video synthesis at the expense of huge computation costs. To address this problem, feature caching methods have been introduced to accelerate diffusion transformers by caching the features in previous timesteps and reusing them in the following timesteps. However, previous caching methods ignore that different tokens exhibit different sensitivities to feature caching, and feature caching on some tokens may lead to 10$\times$ more destruction to the overall generation quality compared with other tokens.
+            In this paper, we introduce token-wise feature caching, allowing us to adaptively select the most suitable tokens for caching, and further enable us to apply different caching ratios to neural layers in different types and depths. Extensive experiments on PixArt-$\alpha$, OpenSora, and DiT demonstrate our effectiveness in both image and video generation with no requirements for training. For instance, 2.36$\times$ and 1.93$\times$ acceleration are achieved on OpenSora and PixArt-$\alpha$ with almost no drop in generation quality.
+          </p>
         </div>
       </div>
     </div>
@@ -61,30 +67,7 @@ In this paper, we introduce token-wise feature caching, allowing us to adaptivel
 
       <!-- 四宫格视频展示 -->
       <div id="video-grid" class="columns is-multiline">
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">OpenSora</h3>
-          <video controls muted width="100%">
-            <source src="static/videos/examples/sample_0004/original.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">ToCa</h3>
-          <video controls muted width="100%">
-            <source src="static/videos/examples/sample_0004/ToCa.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">50% steps</h3>
-          <video controls muted width="100%">
-            <source src="static/videos/examples/sample_0004/15steps.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">FORA</h3>
-          <video controls muted width="100%">
-            <source src="static/videos/examples/sample_0004/FORA.mp4" type="video/mp4">
-          </video>
-        </div>
+        <!-- Videos will be dynamically inserted here by JavaScript -->
       </div>
     </div>
   </div>
@@ -93,48 +76,47 @@ In this paper, we introduce token-wise feature caching, allowing us to adaptivel
 <!-- 页脚 -->
 <footer class="footer">
   <div class="content has-text-centered">
-    <p>Anonymous Research Project © 2024</p>
+    <p>ToCa © 2024</p>
   </div>
 </footer>
 
 <script>
-  let currentPage = 1;
+  // 视频分页数据
   const videoPages = [
     [
-      { title: 'OpenSora',      src: "static/videos/examples/sample_0004/original.mp4" },
-      { title: 'ToCa',          src: "static/videos/examples/sample_0004/ToCa.mp4" },
+      { title: 'OpenSora', src: "static/videos/examples/sample_0004/original.mp4" },
+      { title: 'ToCa', src: "static/videos/examples/sample_0004/ToCa.mp4" },
       { title: '50% timesteps', src: "static/videos/examples/sample_0004/15steps.mp4" },
-      { title: 'FORA',          src: "static/videos/examples/sample_0004/FORA.mp4" }
+      { title: 'FORA', src: "static/videos/examples/sample_0004/FORA.mp4" }
     ],
     [
-      { title: 'OpenSora',      src: "static/videos/examples/sample_0005/original.mp4" },
-      { title: 'ToCa',          src: "static/videos/examples/sample_0005/ToCa.mp4" },
+      { title: 'OpenSora', src: "static/videos/examples/sample_0005/original.mp4" },
+      { title: 'ToCa', src: "static/videos/examples/sample_0005/ToCa.mp4" },
       { title: '50% timesteps', src: "static/videos/examples/sample_0005/15steps.mp4" },
-      { title: 'FORA',          src: "static/videos/examples/sample_0005/FORA.mp4" }
+      { title: 'FORA', src: "static/videos/examples/sample_0005/FORA.mp4" }
     ],
     [
-      { title: 'OpenSora',      src: "static/videos/examples/sample_0006/original.mp4" },
-      { title: 'ToCa',          src: "static/videos/examples/sample_0006/ToCa.mp4" },
+      { title: 'OpenSora', src: "static/videos/examples/sample_0006/original.mp4" },
+      { title: 'ToCa', src: "static/videos/examples/sample_0006/ToCa.mp4" },
       { title: '50% timesteps', src: "static/videos/examples/sample_0006/15steps.mp4" },
-      { title: 'FORA',          src: "static/videos/examples/sample_0006/FORA.mp4" }
+      { title: 'FORA', src: "static/videos/examples/sample_0006/FORA.mp4" }
     ],
     [
-      { title: 'OpenSora',      src: "static/videos/examples/sample_0007/original.mp4" },
-      { title: 'ToCa',          src: "static/videos/examples/sample_0007/ToCa.mp4" },
+      { title: 'OpenSora', src: "static/videos/examples/sample_0007/original.mp4" },
+      { title: 'ToCa', src: "static/videos/examples/sample_0007/ToCa.mp4" },
       { title: '50% timesteps', src: "static/videos/examples/sample_0007/15steps.mp4" },
-      { title: 'FORA',          src: "static/videos/examples/sample_0007/FORA.mp4" }
-    ],
-    [
-      { title: 'OpenSora',      src: "static/videos/examples/sample_0003/original.mp4" },
-      { title: 'ToCa',          src: "static/videos/examples/sample_0003/ToCa.mp4" },
-      { title: '50% timesteps', src: "static/videos/examples/sample_0003/15steps.mp4" },
-      { title: 'FORA',          src: "static/videos/examples/sample_0003/FORA.mp4" }
-    ],
+      { title: 'FORA', src: "static/videos/examples/sample_0007/FORA.mp4" }
+    ]
   ];
 
+  let currentPage = 1;
+  const totalPages = videoPages.length;
+
+  // 加载视频页面
   function loadVideoPage(page) {
     const videoGrid = document.getElementById('video-grid');
-    videoGrid.innerHTML = '';
+    videoGrid.innerHTML = ''; // 清空现有的视频
+
     videoPages[page - 1].forEach(video => {
       const videoColumn = `
         <div class="column is-half">
@@ -146,8 +128,13 @@ In this paper, we introduce token-wise feature caching, allowing us to adaptivel
       `;
       videoGrid.innerHTML += videoColumn;
     });
+
+    // 更新按钮的禁用状态
+    document.getElementById('prevPage').disabled = page === 1;
+    document.getElementById('nextPage').disabled = page === totalPages;
   }
 
+  // 点击“上一页”按钮
   document.getElementById('prevPage').addEventListener('click', function () {
     if (currentPage > 1) {
       currentPage--;
@@ -155,8 +142,9 @@ In this paper, we introduce token-wise feature caching, allowing us to adaptivel
     }
   });
 
+  // 点击“下一页”按钮
   document.getElementById('nextPage').addEventListener('click', function () {
-    if (currentPage < videoPages.length) {
+    if (currentPage < totalPages) {
       currentPage++;
       loadVideoPage(currentPage);
     }
