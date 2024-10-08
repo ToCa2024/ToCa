@@ -178,20 +178,33 @@
     const videoGrid = document.getElementById('video-grid');
     videoGrid.innerHTML = ''; // 清空现有的视频
 
-    const videos = videoPages[page - 1].map(video => {
-      const videoTitle = video.title === 'ToCa' ? 
-        `<strong style="font-family: 'Courier New', monospace; font-weight: bold;">ToCa</strong> (Ours)` : 
-        video.title;
+const videos = videoPages[page - 1].map(video => {
+  let videoTitle;
 
-      return `
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">${videoTitle}</h3>
-          <video controls muted width="100%" autoplay>
-            <source src="${video.src}" type="video/mp4">
-          </video>
-        </div>
-      `;
-    }).join('');
+  switch (video.title) {
+    case 'ToCa':
+      videoTitle = `<strong style="font-family: 'Courier New', monospace; font-weight: bold;">$ToCa(Ours) \\times 2.4$</strong>`;
+      break;
+    case '50% timesteps':
+      videoTitle = `50% timesteps $\\times 2.0$`;
+      break;
+    case 'FORA':
+      videoTitle = `FORA $\\times 1.9$`;
+      break;
+    default:
+      videoTitle = video.title;
+      break;
+  }
+
+  return `
+    <div class="column is-half">
+      <h3 class="subtitle has-text-centered">${videoTitle}</h3>
+      <video controls muted width="100%" autoplay>
+        <source src="${video.src}" type="video/mp4">
+      </video>
+    </div>
+  `;
+});
 
     videoGrid.innerHTML = videos;
 
