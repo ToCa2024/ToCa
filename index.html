@@ -180,7 +180,7 @@
     const videoGrid = document.getElementById('video-grid');
     videoPages.forEach((pageVideos, pageIndex) => {
       const videoPage = document.createElement('div');
-      videoPage.classList.add('video-page');
+      videoPage.classList.add('video-page', 'columns', 'is-multiline');
       if (pageIndex === 0) videoPage.classList.add('active');  // 显示第一页视频
 
       pageVideos.forEach(video => {
@@ -191,7 +191,7 @@
         const videoColumn = `
           <div class="column is-half">
             <h3 class="subtitle has-text-centered">${videoTitle}</h3>
-            <video controls muted preload="auto" width="100%">
+            <video controls muted autoplay preload="auto" width="100%">
               <source src="${video.src}" type="video/mp4">
             </video>
           </div>
