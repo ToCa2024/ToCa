@@ -21,6 +21,10 @@
     };
   </script>
 
+  <style>
+    .video-page { display: none; }
+    .video-page.active { display: block; }
+  </style>
 </head>
 <body>
 
@@ -66,14 +70,12 @@
         <div class="column is-narrow">
           <!-- 左箭头按钮 -->
           <button class="button custom-page-btn" id="prevPage">
-            <!-- 使用文本箭头符号 ← -->
             &#8592;
           </button>
         </div>
         <div class="column is-narrow">
           <!-- 右箭头按钮 -->
           <button class="button custom-page-btn" id="nextPage">
-            <!-- 使用文本箭头符号 → -->
             &#8594;
           </button>
         </div>
@@ -81,7 +83,7 @@
 
       <!-- 四宫格视频展示 -->
       <div id="video-grid" class="columns is-multiline">
-        <!-- Videos will be dynamically inserted here by JavaScript -->
+        <!-- Preloaded videos will be inserted here -->
       </div>
     </div>
   </div>
@@ -173,71 +175,64 @@
   let currentPage = 1;
   const totalPages = videoPages.length;
 
-  // 加载视频页面
-  function loadVideoPage(page) {
+  // 预加载所有视频
+  function preloadVideos() {
     const videoGrid = document.getElementById('video-grid');
-    videoGrid.innerHTML = ''; // 清空现有的视频
+    videoPages.forEach((pageVideos, pageIndex) => {
+      const videoPage = document.createElement('div');
+      videoPage.classList.add('video-page');
+      if (pageIndex === 0) videoPage.classList.add('active');  // 显示第一页视频
 
-    const videos = videoPages[page - 1].map(video => {
-      const videoTitle = video.title === 'ToCa' ? 
-        `<strong style="font-family: 'Courier New', monospace; font-weight: bold;">ToCa</strong> (Ours)` : 
-        video.title;
+      pageVideos.forEach(video => {
+        const videoTitle = video.title === 'ToCa' ? 
+          `<strong style="font-family: 'Courier New', monospace; font-weight: bold;">ToCa</strong> (Ours)` : 
+          video.title;
 
-      return `
-        <div class="column is-half">
-          <h3 class="subtitle has-text-centered">${videoTitle}</h3>
-          <video controls muted width="100%" autoplay>
-            <source src="${video.src}" type="video/mp4">
-          </video>
-        </div>
-      `;
-    }).join('');
-
-    videoGrid.innerHTML = videos;
-
-    // 监听所有视频播放完毕的事件
-    const videoElements = Array.from(videoGrid.querySelectorAll('video'));
-    Promise.all(videoElements.map(video => {
-      return new Promise(resolve => {
-        video.onended = resolve;
+        const videoColumn = `
+          <div class="column is-half">
+            <h3 class="subtitle has-text-centered">${videoTitle}</h3>
+            <video controls muted preload="auto" width="100%">
+              <source src="${video.src}" type="video/mp4">
+            </video>
+          </div>
+        `;
+        videoPage.innerHTML += videoColumn;
       });
-    })).then(() => {
-      // 所有视频播放完毕，自动翻页
-      if (currentPage < totalPages) {
-        currentPage++;
-      } else {
-        currentPage = 1; // 循环回到第一页
-      }
-      loadVideoPage(currentPage);
+
+      videoGrid.appendChild(videoPage);
+    });
+  }
+
+  // 切换视频页面
+  function changePage(newPage) {
+    const videoPagesElements = document.querySelectorAll('.video-page');
+    videoPagesElements.forEach((page, index) => {
+      page.classList.toggle('active', index === newPage - 1);
     });
 
-    // 更新按钮的禁用状态
-    document.getElementById('prevPage').disabled = page === 1;
-    document.getElementById('nextPage').disabled = page === totalPages;
+    currentPage = newPage;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = currentPage === totalPages;
   }
 
   // 点击“上一页”按钮
   document.getElementById('prevPage').addEventListener('click', function () {
     if (currentPage > 1) {
-      currentPage--;
-      loadVideoPage(currentPage);
+      changePage(currentPage - 1);
     }
   });
 
   // 点击“下一页”按钮
   document.getElementById('nextPage').addEventListener('click', function () {
     if (currentPage < totalPages) {
-      currentPage++;
-      loadVideoPage(currentPage);
+      changePage(currentPage + 1);
     }
   });
 
-  // 初始化加载第一页视频
-  loadVideoPage(currentPage);
-
-  // 强制MathJax重新渲染公式
+  // 页面加载时预加载视频
   document.addEventListener('DOMContentLoaded', () => {
-    MathJax.typesetPromise();
+    preloadVideos();  // 预加载视频
+    MathJax.typesetPromise();  // 渲染 LaTeX 公式
   });
 </script>
 
