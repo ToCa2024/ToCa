@@ -28,20 +28,15 @@
 <section class="hero">
   <div class="hero-body">
     <div class="container has-text-centered">
-      <!-- ToCa 部分使用 Courier New 字体并放大字号 -->
       <h1 class="title is-1">
         <span style="font-family: 'Courier New', monospace; font-size: 1.1em;">ToCa</span>: Accelerating Diffusion Transformers with 
-        <!-- Token-wise Feature Caching 中的 To 和 Ca 使用 Courier New 字体并带有下划线 -->
         <span style="text-decoration: underline; font-family: 'Courier New', monospace; font-size: 1.1em;">To</span>ken-wise Feature 
         <span style="text-decoration: underline; font-family: 'Courier New', monospace; font-size: 1.1em;">Ca</span>ching
       </h1>
-      <!-- 作者匿名显示 -->
       <p class="is-size-5">Anonymous</p>
     </div>
   </div>
 </section>
-
-
 
 <!-- 摘要部分 -->
 <section class="section hero is-light">
@@ -92,14 +87,6 @@
   </div>
 </section>
 
-      <!-- 四宫格视频展示 -->
-      <div id="video-grid" class="columns is-multiline">
-        <!-- Videos will be dynamically inserted here by JavaScript -->
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- 页脚 -->
 <footer class="footer">
   <div class="content has-text-centered">
@@ -108,7 +95,6 @@
 </footer>
 
 <script>
-  // 视频分页数据
   const videoPages = [
     [
       { title: 'OpenSora', src: "static/videos/examples/sample_0004/original.mp4" },
@@ -187,34 +173,48 @@
   let currentPage = 1;
   const totalPages = videoPages.length;
 
-// 加载视频页面
-function loadVideoPage(page) {
-  const videoGrid = document.getElementById('video-grid');
-  videoGrid.innerHTML = ''; // 清空现有的视频
+  // 加载视频页面
+  function loadVideoPage(page) {
+    const videoGrid = document.getElementById('video-grid');
+    videoGrid.innerHTML = ''; // 清空现有的视频
 
-  videoPages[page - 1].forEach(video => {
-    // 检查是否是 ToCa 视频，并对其进行特殊处理
-    const videoTitle = video.title === 'ToCa' ? 
-      `<strong style="font-family: 'Courier New', monospace; font-weight: bold;">ToCa</strong> (Ours)` : 
-      video.title;
+    const videos = videoPages[page - 1].map(video => {
+      const videoTitle = video.title === 'ToCa' ? 
+        `<strong style="font-family: 'Courier New', monospace; font-weight: bold;">ToCa</strong> (Ours)` : 
+        video.title;
 
-    const videoColumn = `
-      <div class="column is-half">
-        <h3 class="subtitle has-text-centered">${videoTitle}</h3>
-        <video controls muted width="100%">
-          <source src="${video.src}" type="video/mp4">
-        </video>
-      </div>
-    `;
-    videoGrid.innerHTML += videoColumn;
-  });
+      return `
+        <div class="column is-half">
+          <h3 class="subtitle has-text-centered">${videoTitle}</h3>
+          <video controls muted width="100%" autoplay>
+            <source src="${video.src}" type="video/mp4">
+          </video>
+        </div>
+      `;
+    }).join('');
 
-  // 更新按钮的禁用状态
-  document.getElementById('prevPage').disabled = page === 1;
-  document.getElementById('nextPage').disabled = page === totalPages;
-}
+    videoGrid.innerHTML = videos;
 
+    // 监听所有视频播放完毕的事件
+    const videoElements = Array.from(videoGrid.querySelectorAll('video'));
+    Promise.all(videoElements.map(video => {
+      return new Promise(resolve => {
+        video.onended = resolve;
+      });
+    })).then(() => {
+      // 所有视频播放完毕，自动翻页
+      if (currentPage < totalPages) {
+        currentPage++;
+      } else {
+        currentPage = 1; // 循环回到第一页
+      }
+      loadVideoPage(currentPage);
+    });
 
+    // 更新按钮的禁用状态
+    document.getElementById('prevPage').disabled = page === 1;
+    document.getElementById('nextPage').disabled = page === totalPages;
+  }
 
   // 点击“上一页”按钮
   document.getElementById('prevPage').addEventListener('click', function () {
